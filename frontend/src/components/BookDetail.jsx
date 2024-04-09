@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import {  FaRegHeart } from "react-icons/fa";
 import { MdOutlineWatchLater } from "react-icons/md"
 import { IoBookOutline } from "react-icons/io5";
 import { useParams } from "react-router-dom";
@@ -35,6 +35,9 @@ const BookDetail = () => {
                     volumeId:bookId
                 })
             }).then(response => {
+                if(!response.ok){
+                    throw new Error(response.error)
+                }
                 return response.json()
             }).then(data => {
                 setLoading(false)
@@ -75,16 +78,16 @@ const BookDetail = () => {
                 
                 <p className="py-2 tracking-wider">{bookData?.volumeInfo?.description.replace(/<\/?[^>]+(>|$)/g, "")}</p>
                 <div className="flex gap-6 py-6">
-                    <button className="flex gap-1 items-center border border-black py-3 px-6 rounded-md text-black font-semibold" onClick={() => handleBookShelf(0)}>
+                    {/* <button className="flex gap-1 items-center border border-black py-3 px-6 rounded-md text-black font-semibold" onClick={() => handleBookShelf(0)}>
                     <FaRegBookmark />
-                    Add to my bookself {loading&& "loading"}</button>
+                    Add to my bookshelf {loading&& "loading"}</button> */}
                     <button className="flex gap-2 items-center border border-black py-3 px-6 rounded-md text-black" onClick={() => handleBookShelf(0)}>
                         <FaRegHeart/>
                         <span className="font-semibold">Add to Favourates</span> </button>
-                    <button className="flex gap-2 items-center border border-black py-3 px-6 rounded-md text-black" onClick={() => handleBookShelf(0)}>
+                    <button className="flex gap-2 items-center border border-black py-3 px-6 rounded-md text-black" onClick={() => handleBookShelf(3)}>
                     <IoBookOutline />
                         <span className="text-sm font-semibold">currently Reading</span> </button>
-                    <button className="flex gap-2 items-center border border-black py-3 px-6 rounded-md text-black" onClick={() => handleBookShelf(0)}>
+                    <button className="flex gap-2 items-center border border-black py-3 px-6 rounded-md text-black" onClick={() => handleBookShelf(2)}>
                     <MdOutlineWatchLater />
                         <span className="font-semibold">Read later</span> </button>
                     

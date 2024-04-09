@@ -6,7 +6,7 @@ import BookDetail from "./components/BookDetail";
 import Login from "./components/Login";
 import { useEffect, useState } from "react";
 import TokenContext from "./components/TokenContext";
-import BookSelf from "./components/BookSelf";
+import BookShelf from "./components/BookShelf";
 
 function App() {
   const [user,setUser] = useState()
@@ -44,7 +44,7 @@ function App() {
         <Route path="/" element={<Body />} />
         <Route path="/login" element={user ? <Navigate to="/"/> : <Login />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/bookself" element={<BookSelf />} />
+        <Route path="/bookshelf" element={!user ? <Navigate to="/"/> : <BookShelf />} />
         <Route path="/:bookId" element={<BookDetail/>} />
       </Routes>
     </Router>

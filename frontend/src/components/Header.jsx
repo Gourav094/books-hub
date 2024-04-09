@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
+import toast,{Toaster} from "react-hot-toast"
+import logo from "../assets/book.png"
 
 const Header = (userDetail) => {
     const [showDropDown,setShowDropDown] = useState(false)
@@ -33,21 +35,25 @@ const Header = (userDetail) => {
 
     return (
         <div className="bg-slate-800 py-6">
+            <div><Toaster/></div>
             <div className="relative max-w-[1300px] mx-auto flex justify-between">
-                <p className="text-white text-xl">BooksHub</p>
+                <div className="flex items-center gap-2">
+                    <img className="h-10" src={logo} />
+                    <p className="text-white text-xl font-medium">BooksHub</p>
+                </div>
                 <ul className="flex items-center text-white gap-8">
-                <Link to={"/"}><li className="cursor-pointer py-1 ">Home</li></Link>
-                    <Link to={"/search"}><li className="cursor-pointer py-1 ">search</li></Link>
-                    <li className="cursor-pointer py-1 ">Favourites</li>
-                    {!user && <Link to="/login"><li className="cursor-pointer py-1 ">Sign in</li></Link>}
-                    {user && <li ref={dropDownRef} className="cursor-pointer" onClick={handleDropDown}>{user?.profile?.displayName}</li>}
+                    <Link to={"/"}><li className="cursor-pointer py-1 hover:border-b transition-all">Home</li></Link>
+                    <Link to={"/search"}><li className="cursor-pointer py-1 hover:border-b transition-all">search</li></Link>
+                    { user ? (<Link to={"/bookshelf"}><li className="cursor-pointer py-1 hover:border-b transition-all">BookShelf</li></Link>):
+                    (<li className="cursor-pointer py-1 " onClick={() => toast.error("Please login first")}>BookShelf</li>)}
+                    {!user && <Link to="/login"><li className="cursor-pointer py-1 hover:border-b transition-all">Sign in</li></Link>}
+                    {user && <li ref={dropDownRef} className="cursor-pointer transition-all py-1 bg-slate-700 rounded-full px-3" onClick={handleDropDown}>{user?.profile?.displayName[0]}</li>}
                 </ul>
-                {showDropDown && <div className="absolute right-0 z-10 mt-14 pb-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                {showDropDown && <div className="absolute right-0 z-10 mt-16 pb-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
                     <div className="py-1" role="none">
-                        <a href="#" className="text-gray-700 block px-6 py-3 text-sm border-b">Currently Reading</a>
-                        <a href="#" className="text-gray-700 block px-6 py-3 text-sm border-b">To Read</a>
-                        <a href="#" className="text-gray-700 block px-6 py-3 text-sm border-b">BookSelf</a>
-                        <a href="#" className="text-gray-700 block px-6 py-3 text-sm border-b">Favourites</a>
+                        <Link to={"/bookshelf"} className="text-gray-700 block px-6 py-3 text-sm border-b">Favourites</Link>
+                        <Link to={"/bookshelf"} className="text-gray-700 block px-6 py-3 text-sm border-b">To Read</Link>
+                        <Link to={"/bookshelf"} className="text-gray-700 block px-6 py-3 text-sm border-b">Currently Reading</Link>
                         <button className="text-gray-700 block w-full px-6 pt-2 text-left text-sm" onClick={handleLogout}>Log out</button>
                     </div>
                 </div>}

@@ -3,7 +3,7 @@ const { getUserBookShelf, addNewBook } = require('./user.controller')
 
 const userBooksRouter = express.Router()
 
-userBooksRouter.get('/bookself/:shelfId', getUserBookShelf)
+userBooksRouter.get('/bookshelf/:shelfId', getUserBookShelf)
 
 userBooksRouter.post('/add/book/:shelfId/',addNewBook)
 

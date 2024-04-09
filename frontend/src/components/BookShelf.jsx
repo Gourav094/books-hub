@@ -3,13 +3,16 @@ import TokenContext from "./TokenContext";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import toast from "react-hot-toast"
-const BookSelf = () => {
+import { MdOutlineWatchLater } from "react-icons/md";
+import { IoBookOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
+const BookShelf = () => {
 	const { accessToken } = useContext(TokenContext);
     const [bookData,setBookData] = useState([])
     const [loading,setLoading] = useState(false)
     const fetchData = (shelfId) => {
         setLoading(true)
-        fetch(`http://localhost:8000/user/bookself/${shelfId}`,{
+        fetch(`http://localhost:8000/user/bookshelf/${shelfId}`,{
             method:'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -33,25 +36,30 @@ const BookSelf = () => {
     useEffect(() => {
         fetchData(0)
     },[])
-    if(!bookData)return
-    console.log(bookData?.data?.items)
-    
 
 	return <div className="flex">
         <div className="min-w-60 bg-gray-100 p-4 border-r min-h-screen overflow-y-hidden">
             <ul>
-                <li className="py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(0)}>Favourites</li>
-                <li className="py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(0)}>To read</li>
-                <li className="py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(0)}>Currently reading</li>
-                <li className="py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(0)}>Currently reading</li>
+                <li className="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(0)}>
+                <FaRegHeart/>
+                    Favourites</li>
+                <li className="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(3)}>
+                <IoBookOutline />
+                    To read</li>
+                <li className="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer font-medium hover:bg-gray-50 my-2" onClick={() => fetchData(2)}>
+                <MdOutlineWatchLater />
+                    Currently reading</li>
             </ul>
         </div>
         <div className="px-10 py-6 w-full">
             <h1 className="text-lg px-6 pb-4 font-medium">Your books:</h1>
             {loading ? (
-                <Loader/>
+                <div className="pl-24 py-16"><Loader/></div>
             ) : (
-                <div className="flex flex-wrap gap-10">
+                bookData.length === 0 ? (
+                    <h1>Add some collection to see your bookshelf</h1>
+                ) : (
+                    <div className="flex flex-wrap gap-10">
                     {
                         bookData?.data?.items?.map((book) => (
                             <div className='min-h-52 w-48 px-6 py-4' key={book.id}>
@@ -70,9 +78,10 @@ const BookSelf = () => {
                         ))
                     }
                 </div>
+                ) 
             )}
         </div>
     </div>;
 };
 
-export default BookSelf;
+export default BookShelf;

@@ -22,7 +22,7 @@ async function addNewBook(req,res){
     const response = await addNewBookData(accessToken,shelfId,volumeId)
     if(!response){
         return res.status(400).json({
-            error:"Getting error in adding new book"
+            error:"Please login to add book"
         })
     }
     res.status(200).json({

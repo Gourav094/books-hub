@@ -8,8 +8,14 @@ async function getSearchData(query) {
 
 
 async function getOneBookData(bookId) {
-    const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
-    return response.data
+    try{
+        const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
+        return response.data
+    }
+    catch(err){
+        return "Error in finding book data"
+    }
+    
 }
 
 async function getUserBookData(accessToken,shelfId) {
