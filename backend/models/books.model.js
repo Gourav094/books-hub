@@ -46,8 +46,8 @@ async function addNewBookData(accessToken, shelfId, volumeId) {
             }
         );
         return response.data;
-    } catch (error) {
-        console.error('Error adding new book:');
+    } catch (err) {
+        console.error('Error adding new book:',);
     }
 }
 async function removeBookData(accessToken, shelfId, volumeId) {

@@ -9,7 +9,8 @@ const { CLIENT_URL } = require('./constant');
 const passport = require('passport')
 const { Strategy } = require('passport-google-oauth20')
 const cookieSession = require('cookie-session')
-const helmet = require('helmet')
+const helmet = require('helmet');
+const tokenExpired = require('./checkToken');
 require('dotenv').config()
 
 // allow cross-origin request providing with credentials
@@ -97,6 +98,9 @@ app.get('/auth/logout', (req, res) => {
 
 app.get('/login/success', (req, res) => {
     if (req.user) {
+        if(!tokenExpired(req.user?.accessToken)){
+            res.status(401).json({error:"session timeout"})
+        }
         res.status(200).json({
             success: true,
             message: "successfully login",
