@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 const Genre = () => {
     const loading = useSelector((state) => state.bookData.isLoading);
     const booksData = useGenreList();
-    console.log(booksData)
 
+    console.log("rendering genre ",booksData)
     return loading? (
         <>
             <p className="text-center font-medium pb-10">Please wait, while we are fetching all data</p>

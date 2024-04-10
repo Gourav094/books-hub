@@ -2,7 +2,6 @@ import { Link } from "react-router-dom"
 
 const BooksCard = (data) => {
     const booksData = data.booksData
-    console.log(booksData)
     if(!booksData)return 
 
   return (booksData.map((book) => (
