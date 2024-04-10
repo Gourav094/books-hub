@@ -50,10 +50,29 @@ async function addNewBookData(accessToken, shelfId, volumeId) {
         console.error('Error adding new book:');
     }
 }
+async function removeBookData(accessToken, shelfId, volumeId) {
+    try {
+        const response = await axios.post(
+            `https://www.googleapis.com/books/v1/mylibrary/bookshelves/${shelfId}/removeVolume?key=${API_KEY}`,
+            {
+                volumeId: volumeId
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error removing new book:');
+    }
+}
 
 module.exports = {
     getSearchData,
     getOneBookData,
     getUserBookData,
-    addNewBookData
+    addNewBookData,
+    removeBookData
 }

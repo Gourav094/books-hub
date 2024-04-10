@@ -1,5 +1,5 @@
 const { default: axios } = require("axios")
-const { getUserBookData, addNewBookData } = require("../models/books.model")
+const { getUserBookData, addNewBookData, removeBookData } = require("../models/books.model")
 
 async function getUserBookShelf(req,res){
     const shelfId = req.params.shelfId
@@ -30,7 +30,27 @@ async function addNewBook(req,res){
     })
 }
 
+async function removeBook(req,res) {
+    const shelfId = req.params.shelfId
+    const volumeId = req.body.volumeId
+    console.log(shelfId,volumeId)
+    const accessToken = req?.headers?.authorization?.split(' ')?.[1] || req.body.accessToken;
+
+    console.log(accessToken)
+    const response = await removeBookData(accessToken,shelfId,volumeId)
+    if(!response){
+        return res.status(400).json({
+            error:"Please login to remove book"
+        })
+    }
+    res.status(200).json({
+        data:"Successfully removed book from your list"
+    })
+} 
+
+
 module.exports = {
     getUserBookShelf,
-    addNewBook
+    addNewBook,
+    removeBook
 }

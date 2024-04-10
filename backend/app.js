@@ -1,25 +1,30 @@
+const path = require('path');
 const express = require('express');
+const app = express()
 const cors = require('cors')
 const { bookRouter } = require('./routes/books.routes');
-const app = express()
-const passport = require('passport')
-const { Strategy } = require('passport-google-oauth20')
-const helmet = require('helmet')
-require('dotenv').config()
-const path = require('path');
-const cookieSession = require('cookie-session')
 const { userBooksRouter } = require('./routes/user.routes');
 const { CLIENT_URL } = require('./constant');
+
+const passport = require('passport')
+const { Strategy } = require('passport-google-oauth20')
+const cookieSession = require('cookie-session')
+const helmet = require('helmet')
+require('dotenv').config()
+
+// allow cross-origin request providing with credentials
 app.use(cors({
-    origin:"http://localhost:5173",
-    methods:['GET','POST','PUT','DELETE'],
-    credentials:true
+    origin: "http://localhost:5173",
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
 }))
 
-
+// middleware to serve frontend and backend
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// security middlewares
 const config = {
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
@@ -35,25 +40,27 @@ const AUTH_OPTIONS = {
 }
 
 function verifyCallback(accessToken, refreshToken, profile, done) {
+    console.log("refresh token ",refreshToken)
+    console.log("acess token ",accessToken)
     done(null, { profile: profile, accessToken: accessToken })
 }
 
 passport.use(new Strategy(AUTH_OPTIONS, verifyCallback))
 
-passport.serializeUser((user,done) => {
-    done(null,user)
+passport.serializeUser((user, done) => {
+    done(null, user)
 })
 
-passport.deserializeUser((obj,done) => {
-    done(null,obj)
+passport.deserializeUser((obj, done) => {
+    done(null, obj)
 })
 
 app.use(helmet())
 
 app.use(cookieSession({
-    name:"session",
+    name: "session",
     maxAge: 24 * 60 * 60 * 1000,
-    keys: [config.SECRET_KEY1,config.SECRET_KEY2]
+    keys: [config.SECRET_KEY1, config.SECRET_KEY2]
 }))
 
 app.use(passport.initialize())
@@ -71,35 +78,29 @@ function checkLogin(req, res, next) {
     next()
 }
 
-
+// security endpoints
 app.get('/auth/google', passport.authenticate('google', {
-    scope: ['https://www.googleapis.com/auth/books','profile']
+    scope: ['https://www.googleapis.com/auth/books', 'profile']
 }))
 
 app.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect: CLIENT_URL,
     failureRedirect: '/failure',
     session: true
-}),(req,res) => {console.log('authorization done')})
+}), (req, res) => { console.log('authorization done') })
 
 
 app.get('/auth/logout', (req, res) => {
     req.logout()
     res.redirect(CLIENT_URL)
- })
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.get('/login/success',(req,res) => {
-    if(req.user){
+app.get('/login/success', (req, res) => {
+    if (req.user) {
         res.status(200).json({
-            success:true,
-            message:"successfully login",
-            user:req.user
+            success: true,
+            message: "successfully login",
+            user: req.user
         })
     }
 })
@@ -109,6 +110,13 @@ app.get('/failure', (req, res) => {
         error: "Oops! Getting error during login"
     })
 })
+
+// application middleware
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
+
+
 app.use(bookRouter)
 app.use('/user', checkLogin, userBooksRouter)
 
