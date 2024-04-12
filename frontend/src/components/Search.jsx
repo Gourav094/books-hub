@@ -31,7 +31,6 @@ const Search = () => {
       const data = await fetch(SEARCH_API+query)
       const jsonData = await data.json()
       setBooksData(jsonData?.items)
-      console.log(booksData)
   }
 
   return (

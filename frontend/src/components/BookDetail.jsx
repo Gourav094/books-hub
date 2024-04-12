@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import BookShimmer from "./BookShimmer"
 import TokenContext from "./TokenContext";
 import toast,{Toaster} from 'react-hot-toast';
+import { backend_API } from "../utils/constant";
 
 const BookDetail = () => {
     const bookId = useParams().bookId
@@ -25,7 +26,7 @@ const BookDetail = () => {
 
     const handleBookShelf = (shelf) => {
         const addBook = () => {
-             fetch(`http://localhost:8000/user/add/book/${shelf}`,{
+             fetch(`${backend_API}/user/add/book/${shelf}`,{
                 method:'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -41,7 +42,6 @@ const BookDetail = () => {
                 return response.json()
             }).then(data => {
                 setLoading(false)
-                console.log(data)
                 toast.success("Successfully added data to your list")
             })
             .catch(() => {

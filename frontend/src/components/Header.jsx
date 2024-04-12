@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import toast,{Toaster} from "react-hot-toast"
 import logo from "../assets/book.png"
+import { backend_API } from "../utils/constant"
 
 const Header = (userDetail) => {
     const [showDropDown,setShowDropDown] = useState(false)
     const user = userDetail.user
     const dropDownRef = useRef(null);
     const handleLogout = () => {
-        window.open('http://localhost:8000/auth/logout',"_self")
+        window.open(`${backend_API}/auth/logout`,"_self")
     }
 
     const handleDropDown = () => {

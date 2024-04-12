@@ -6,6 +6,7 @@ import toast from "react-hot-toast"
 import { MdOutlineDelete, MdOutlineWatchLater } from "react-icons/md";
 import { IoBookOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
+import { backend_API } from "../utils/constant";
 const BookShelf = () => {
 	const { accessToken } = useContext(TokenContext);
     const [shelf,setShelf] = useState(0)
@@ -13,10 +14,9 @@ const BookShelf = () => {
     const [loading,setLoading] = useState(false)
 
     const fetchData = (shelfId) => {
-        console.log("fetching book favourite data")
         setShelf(shelfId)
         setLoading(true)
-        fetch(`http://localhost:8000/user/bookshelf/${shelfId}`,{
+        fetch(`${backend_API}/user/bookshelf/${shelfId}`,{
             method:'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -31,10 +31,8 @@ const BookShelf = () => {
         .catch(() => {
             setLoading(false)
             toast.error("Please try again")
-            console.log("Error in getting books data")
         })
     }
-    console.log(bookData.length)
     useEffect(() => {
         fetchData(0)
     },[])
@@ -42,7 +40,7 @@ const BookShelf = () => {
     const handleRemoveBook = (volumeId, shelfId) => {
         const removeBook = async () => {
             try {
-                await fetch(`http://localhost:8000/user/remove/book/${shelfId}`, {
+                await fetch(`${backend_API}/user/remove/book/${shelfId}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
@@ -57,7 +55,6 @@ const BookShelf = () => {
                 setLoading(false);
                 fetchData(shelfId);
             } catch (error) {
-                console.error("Error removing book:", error);
                 setLoading(false);
                 toast.error("Please login to remove");
             }
@@ -86,7 +83,7 @@ const BookShelf = () => {
             {loading ? (
                 <div className="pl-24 py-16"><Loader/></div>
             ) : (
-                !bookData.length? (
+                !bookData?.data?.items? (
                     <h1 className="flex items-center justify-center pt-32 text-xl">Add books to see your bookshelf</h1>
                 ) : (
                     <div className="flex flex-wrap gap-10">

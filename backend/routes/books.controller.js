@@ -7,7 +7,6 @@ function getAllBooks(req,res) {
 async function getOneBook(req,res) {
     const bookId = req.params.bookId
     const bookData = await getOneBookData(bookId) 
-    console.log(bookData)
     if(!bookData){
         return res.status(400).json({
             error:"error during fetching data for particular book"

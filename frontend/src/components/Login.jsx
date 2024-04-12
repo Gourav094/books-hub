@@ -1,9 +1,10 @@
 import book from "../assets/book.png"
 import googleLogo from "../assets/google.png"
+import { backend_API } from "../utils/constant"
 const Login = () => {
 
     const handleLogin = () => {
-        window.open("http://localhost:8000/auth/google","_self")
+        window.open(`${backend_API}/auth/google`,"_self")
     }
 
   return (

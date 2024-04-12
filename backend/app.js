@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 const { bookRouter } = require('./routes/books.routes');
 const { userBooksRouter } = require('./routes/user.routes');
-const { CLIENT_URL } = require('./constant');
+const { CLIENT_URL, backend_URL } = require('./constant');
 
 const passport = require('passport')
 const { Strategy } = require('passport-google-oauth20')
@@ -15,7 +15,7 @@ require('dotenv').config()
 
 // allow cross-origin request providing with credentials
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: CLIENT_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -34,14 +34,13 @@ const config = {
 }
 
 const AUTH_OPTIONS = {
-    callbackURL: '/auth/google/callback',
+    callbackURL: `${backend_URL}/auth/google/callback`,
     clientID: config.CLIENT_ID,
     clientSecret: config.CLIENT_SECRET,
     scope: ['https://www.googleapis.com/auth/books']
 }
 
 function verifyCallback(accessToken, refreshToken, profile, done) {
-    console.log("refresh token ",refreshToken)
     console.log("acess token ",accessToken)
     done(null, { profile: profile, accessToken: accessToken })
 }
@@ -96,10 +95,11 @@ app.get('/auth/logout', (req, res) => {
     res.redirect(CLIENT_URL)
 })
 
-app.get('/login/success', (req, res) => {
+app.get('/login/success', async(req, res) => {
     if (req.user) {
-        if(!tokenExpired(req.user?.accessToken)){
-            res.status(401).json({error:"session timeout"})
+        console.log(await tokenExpired(req?.user?.accessToken))
+        if(await tokenExpired(req.user?.accessToken) === true){
+            return res.status(401).json({error:"session timeout"})
         }
         res.status(200).json({
             success: true,

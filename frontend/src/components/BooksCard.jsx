@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 const BooksCard = (data) => {
     const booksData = data.booksData
     if(!booksData)return 
-
   return (booksData.map((book) => (
                 <div className='min-h-52 max-w-48  px-6 py-4' key={book.id}>
                     <Link to={`/${book.id}`}>
