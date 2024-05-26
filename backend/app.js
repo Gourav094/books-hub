@@ -84,7 +84,7 @@ app.get('/auth/google', passport.authenticate('google', {
 }))
 
 app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect: CLIENT_URL,
+    successRedirect: backend_URL,
     failureRedirect: '/failure',
     session: true
 }), (req, res) => { console.log('authorization done') })
@@ -92,7 +92,7 @@ app.get('/auth/google/callback', passport.authenticate('google', {
 
 app.get('/auth/logout', (req, res) => {
     req.logout()
-    res.redirect(CLIENT_URL)
+    res.redirect(backend_URL)
 })
 
 app.get('/login/success', async(req, res) => {
