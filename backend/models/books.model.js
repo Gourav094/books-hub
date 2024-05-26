@@ -69,10 +69,22 @@ async function removeBookData(accessToken, shelfId, volumeId) {
     }
 }
 
+async function getGenreBookData(genre){
+    try{
+        const response =await axios.get(`https://www.googleapis.com/books/v1/volumes?q=+subject=${genre}`)
+       
+        return response.data;
+    }
+    catch(err){
+        return null
+    }
+}
+
 module.exports = {
     getSearchData,
     getOneBookData,
     getUserBookData,
     addNewBookData,
-    removeBookData
+    removeBookData,
+    getGenreBookData
 }

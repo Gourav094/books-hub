@@ -2,10 +2,11 @@ import { fetchGenresDataStart, fetchGenresDataSuccess, fetchGenresDataFailure } 
 
 const fetchGenreData = async (genre) => {
     try {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=+subject=${genre}`);
-        const data = await response.json();
+        const response = await fetch(`/books/genre?q=${genre}`);
 
-        return data.items; 
+        const data = await response.json();
+        console.log(data)
+        return data?.genreBooks?.items; 
     } catch (error) {
         throw new Error(`Error fetching data for ${genre}: ${error.message}`);
     }

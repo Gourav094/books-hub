@@ -98,7 +98,8 @@ app.get('/auth/logout', (req, res) => {
 app.get('/login/success', async(req, res) => {
     if (req.user) {
         console.log(await tokenExpired(req?.user?.accessToken))
-        if(await tokenExpired(req.user?.accessToken) === true){
+        const tokenNotValid = await tokenExpired(req.user?.accessToken)
+        if(tokenNotValid === true){
             return res.status(401).json({error:"session timeout"})
         }
         res.status(200).json({
@@ -116,10 +117,11 @@ app.get('/failure', (req, res) => {
 })
 
 // application middleware
+app.use(express.static(path.resolve(__dirname, "./build")));
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
-
 
 app.use(bookRouter)
 app.use('/user', checkLogin, userBooksRouter)

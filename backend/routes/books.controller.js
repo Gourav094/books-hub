@@ -1,4 +1,4 @@
-const { getSearchData, getOneBookData } = require("../models/books.model")
+const { getSearchData, getOneBookData, getGenreBookData } = require("../models/books.model")
 
 function getAllBooks(req,res) {
     res.send('here you will shown all the book data')
@@ -30,8 +30,23 @@ async function getSearchResult(req,res){
     })
 }
 
+async function getBookGenre(req,res){
+    const genre = req.query.q
+    const genreBooks = await getGenreBookData(genre)
+
+    if(!genreBooks){
+        return res.status(400).json({
+            error:"Error occurred during finding genre"
+        })
+    }
+    res.status(200).json({
+        genreBooks
+    })
+}
+
 module.exports = {
     getAllBooks,
     getOneBook,
-    getSearchResult
+    getSearchResult,
+    getBookGenre
 }
