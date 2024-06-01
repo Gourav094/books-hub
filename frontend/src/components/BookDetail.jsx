@@ -7,6 +7,7 @@ import BookShimmer from "./BookShimmer"
 import TokenContext from "./TokenContext";
 import toast,{Toaster} from 'react-hot-toast';
 import { backend_API } from "../utils/constant";
+import axios from "axios";
 
 const BookDetail = () => {
     const bookId = useParams().bookId
@@ -15,8 +16,8 @@ const BookDetail = () => {
     const {accessToken} = useContext(TokenContext)
 
     const fetchBook = async() => {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
-        const json = await response.json()
+        const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
+        const json = response.data
         setBookData(json)
     }
 
@@ -26,28 +27,21 @@ const BookDetail = () => {
 
     const handleBookShelf = (shelf) => {
         const addBook = () => {
-             fetch(`${backend_API}/user/add/book/${shelf}`,{
-                method:'POST',
+            axios.post(`${backend_API}/user/add/book/${shelf}`, {
+                volumeId: bookId
+            }, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json' 
-                },
-                body:JSON.stringify({
-                    volumeId:bookId
-                })
-            }).then(response => {
-                if(!response.ok){
-                    throw new Error(response.error)
                 }
-                return response.json()
-            }).then(data => {
-                setLoading(false)
-                toast.success("Successfully added data to your list")
-            })
-            .catch(() => {
-                setLoading(false)
-                toast.error("Please login to add")
-            })
+            }).then(response => {
+                setLoading(false);
+                toast.success("Successfully added data to your list");
+                console.log(response)
+            }).catch(error => {
+                setLoading(false);
+                toast.error("Please login to add");
+            });
         }
         setLoading(true)
         addBook()
@@ -60,7 +54,8 @@ const BookDetail = () => {
         <div><Toaster/></div>
         <div className="grid grid-flow-col gap-8 py-10">
             <div className="flex flex-col gap-4">
-                <img alt="bookImage" className='w-52 rounded-lg shadow' src={bookData?.volumeInfo?.imageLinks?.large} />
+                <img alt="bookImage" className='w-52 rounded-lg shadow' src={bookData?.volumeInfo?.imageLinks?.thumbnail} />
+                {/* <Image src={bookData?.volumeInfo?.imageLinks?.large}/> */}
                 <button className="text-center py-3 px-6 rounded-md text-white bg-black text-sm font-semibold">
                             <a href={bookData?.saleInfo?.buyLink} target="_blank">Get this book</a> </button>
             </div>

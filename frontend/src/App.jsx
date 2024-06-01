@@ -9,34 +9,35 @@ import TokenContext from "./components/TokenContext";
 import BookShelf from "./components/BookShelf";
 import toast,{Toaster} from "react-hot-toast"
 import { backend_API } from "./utils/constant";
+import axios from "axios";
 
 function App() {
   const [user,setUser] = useState()
   const [token,setToken]  = useState()
   useEffect(() => {
     const getUser = () => {
-      fetch(`${backend_API}/login/success`,{
-        method:'GET',
-        credentials:'include',
-        headers:{
-          Accept: "application/json",
-          "Content-Type":"application/json",
-        }
+      axios.get(`${backend_API}/login/success`, {
+          headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+          },
+          withCredentials: true 
       }).then((response) => {
-        if(response.status === 200){
-          return response.json()
-        }
-        else if(response.status === 401){
-          toast.error("session timeout! Please login again")
-        }
-        else throw new Error("Authentication failed")
+          if (response.status === 200) {
+              console.log(response.data);
+              return response.data;
+          } else if (response.status === 401) {
+              toast.error("Session timeout! Please login again");
+          } else {
+              throw new Error("Authentication failed");
+          }
       }).then(res => {
-        setUser(res.user)
-        setToken(res.user?.accessToken);
+          setUser(res.user);
+          setToken(res.user?.accessToken);
       }).catch(err => {
-        console.log(err)
-      })
-    }
+          console.log(err);
+      });
+    };
     getUser()
   },[]) 
 

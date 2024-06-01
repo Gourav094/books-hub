@@ -7,6 +7,7 @@ import { MdOutlineDelete, MdOutlineWatchLater } from "react-icons/md";
 import { IoBookOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { backend_API } from "../utils/constant";
+import axios from "axios";
 const BookShelf = () => {
 	const { accessToken } = useContext(TokenContext);
     const [shelf,setShelf] = useState(0)
@@ -14,43 +15,38 @@ const BookShelf = () => {
     const [loading,setLoading] = useState(false)
 
     const fetchData = (shelfId) => {
-        setShelf(shelfId)
-        setLoading(true)
-        fetch(`${backend_API}/user/bookshelf/${shelfId}`,{
-            method:'GET',
+        setShelf(shelfId);
+        setLoading(true);
+        axios.get(`${backend_API}/user/bookshelf/${shelfId}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
-            },
+            }
         }).then(response => {
-            return response.json()
-        }).then(data => {
-            setBookData(data)
-            setLoading(false)
-        })
-        .catch(() => {
-            setLoading(false)
-            toast.error("Please try again")
-        })
-    }
+            setBookData(response.data);
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+            toast.error("Please try again");
+        });
+    };
     useEffect(() => {
         fetchData(0)
     },[])
 
     const handleRemoveBook = (volumeId, shelfId) => {
         const removeBook = async () => {
+            setLoading(true); 
             try {
-                await fetch(`${backend_API}/user/remove/book/${shelfId}`, {
-                    method: 'POST',
+                await axios.post(`${backend_API}/user/remove/book/${shelfId}`, {
+                    volumeId: volumeId
+                }, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        volumeId: volumeId
-                    })
+                    }
                 });
-    
+        
                 toast.success("Successfully removed from your list");
                 setLoading(false);
                 fetchData(shelfId);
@@ -58,7 +54,7 @@ const BookShelf = () => {
                 setLoading(false);
                 toast.error("Please login to remove");
             }
-        };  
+        };
         setLoading(true);
         removeBook();
     };

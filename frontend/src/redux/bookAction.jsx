@@ -1,12 +1,12 @@
+import { backend_API } from '../utils/constant';
 import { fetchGenresDataStart, fetchGenresDataSuccess, fetchGenresDataFailure } from './bookSlice';
+import axios from "axios"
 
 const fetchGenreData = async (genre) => {
     try {
-        const response = await fetch(`/books/genre?q=${genre}`);
+        const response = await axios.get(`${backend_API}/books/genre?q=${genre}`);
 
-        const data = await response.json();
-        console.log(data)
-        return data?.genreBooks?.items; 
+        return response.data?.genreBooks?.items; 
     } catch (error) {
         throw new Error(`Error fetching data for ${genre}: ${error.message}`);
     }

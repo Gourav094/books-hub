@@ -4,6 +4,7 @@ import BooksCard from "./BooksCard"
 import {SEARCH_API} from "../utils/constant"
 import { IoIosSearch } from "react-icons/io";
 import Loader from "./Loader";
+import axios from "axios";
 const Search = () => {
   const [query,setQuery] = useState('')
   const searchResultsRef = useRef(null);
@@ -28,9 +29,9 @@ const Search = () => {
   }, [booksData]);
 
   const fetchData = async () => {
-      const data = await fetch(SEARCH_API+query)
-      const jsonData = await data.json()
-      setBooksData(jsonData?.items)
+      const response = await axios.get(SEARCH_API+query)
+      // const jsonData = await data.json()
+      setBooksData(response.data?.items)
   }
 
   return (
