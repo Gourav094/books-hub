@@ -4,7 +4,7 @@ const Banner = () => {
     <div className="mx-auto max-w-7xl">
       <div className="relative">
                 <img
-                    src={'../../public/paper-bg.jpg'}
+                    src={'/paper-bg.jpg'}
                     alt="billboard"
                     className="h-72 w-full rounded-lg"
                     height={0}
@@ -13,7 +13,7 @@ const Banner = () => {
                 />
                 <div className="absolute inset-0 h-full w-full rounded-lg bg-gray-950 opacity-30" />
                 <img
-                    src={'../../public/book.png'}
+                    src={'/book.png'}
                     alt="billboard"
                     className="absolute bottom-0 right-5"
                     height={0}

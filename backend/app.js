@@ -93,7 +93,7 @@ app.get('/auth/google/callback', passport.authenticate('google', {
 
 app.get('/auth/logout', (req, res) => {
     req.logout()
-    res.redirect(backend_URL)
+    res.redirect(CLIENT_URL)
 })
 
 app.get('/login/success', async(req, res) => {
