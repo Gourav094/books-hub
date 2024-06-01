@@ -44,7 +44,7 @@ const Header = (userDetail) => {
                 </div>
                 <ul className="flex items-center text-white gap-8">
                     <Link to={"/"}><li className="cursor-pointer py-1 hover:border-b transition-all">Home</li></Link>
-                    <Link to={"/search"}><li className="cursor-pointer py-1 hover:border-b transition-all">search</li></Link>
+                    <Link to={"/search"}><li className="cursor-pointer py-1 hover:border-b transition-all">Search</li></Link>
                     { user ? (<Link to={"/bookshelf"}><li className="cursor-pointer py-1 hover:border-b transition-all">BookShelf</li></Link>):
                     (<li className="cursor-pointer py-1 " onClick={() => toast.error("Please login first")}>BookShelf</li>)}
                     {!user && <Link to="/login"><li className="cursor-pointer py-1 hover:border-b transition-all">Sign in</li></Link>}

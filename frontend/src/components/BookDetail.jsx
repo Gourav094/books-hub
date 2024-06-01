@@ -26,8 +26,8 @@ const BookDetail = () => {
     },[bookId])
 
     const handleBookShelf = (shelf) => {
-        const addBook = () => {
-            axios.post(`${backend_API}/user/add/book/${shelf}`, {
+        const addBook =async () => {
+            await axios.post(`${backend_API}/user/add/book/${shelf}`, {
                 volumeId: bookId
             }, {
                 headers: {
@@ -71,7 +71,7 @@ const BookDetail = () => {
                     bookData?.saleInfo?.isEbook === "true" && <p>Ebook is available</p>     
                 }
                 
-                <p className="py-2 tracking-wider">{bookData?.volumeInfo?.description.replace(/<\/?[^>]+(>|$)/g, "")}</p>
+                <p className="py-2 tracking-wider">{bookData?.volumeInfo?.description?.replace(/<\/?[^>]+(>|$)/g, "")}</p>
                 <div className="flex gap-6 py-6">
                     {/* <button className="flex gap-1 items-center border border-black py-3 px-6 rounded-md text-black font-semibold" onClick={() => handleBookShelf(0)}>
                     <FaRegBookmark />

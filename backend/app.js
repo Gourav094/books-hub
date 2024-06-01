@@ -70,6 +70,7 @@ app.use(passport.session())
 function checkLogin(req, res, next) {
     const Login = req.user
     const accessToken = req.headers.authorization.split(' ')[1]
+    console.log(accessToken)
     if (!Login && !accessToken) {
         return res.status(401).json({
             error: "You need to login !!"
@@ -84,7 +85,7 @@ app.get('/auth/google', passport.authenticate('google', {
 }))
 
 app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect: backend_URL,
+    successRedirect: CLIENT_URL,
     failureRedirect: '/failure',
     session: true
 }), (req, res) => { console.log('authorization done') })
@@ -117,12 +118,14 @@ app.get('/failure', (req, res) => {
 })
 
 // application middleware
-app.use(express.static(path.resolve(__dirname, "./build")));
+// app.use(express.static(path.resolve(__dirname, "./build")));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// })
+app.get('/',(req,res) => {
+    res.json("make request to run the server")
 })
-
 app.use(bookRouter)
 app.use('/user', checkLogin, userBooksRouter)
 
