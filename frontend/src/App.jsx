@@ -39,9 +39,11 @@ function App() {
 		if(!user){
 			getUser();
 		}
-		const userDataFromCookie = JSON.parse(userCookie);
-		setUser(userDataFromCookie.profile);
-		setToken(userDataFromCookie.accessToken);
+		if(userCookie){
+			const userDataFromCookie = JSON.parse(userCookie);
+			setToken(userDataFromCookie.accessToken);
+			setUser(userDataFromCookie.profile);
+		}
 		console.log(user)
 	}, []);
 	return (
