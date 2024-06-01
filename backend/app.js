@@ -40,8 +40,7 @@ const AUTH_OPTIONS = {
     scope: ['https://www.googleapis.com/auth/books']
 }
 
-function verifyCallback(accessToken, refreshToken, profile, done) {
-    console.log("acess token ",accessToken)
+function verifyCallback(accessToken, refreshToken, profile, done) { 
     done(null, { profile: profile, accessToken: accessToken })
 }
 
@@ -82,23 +81,31 @@ function checkLogin(req, res, next) {
 // security endpoints
 app.get('/auth/google', passport.authenticate('google', {
     scope: ['https://www.googleapis.com/auth/books', 'profile']
-}))
+}),(req,res) => {
+    console.log("yeash" ,req.user)
+})
 
 app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect: CLIENT_URL,
     failureRedirect: '/failure',
     session: true
-}), (req, res) => { console.log('authorization done') })
+}), (req, res) => { 
+    console.log('authorization done') 
+    // console.log(req.user)
+    res.cookie('user-data', JSON.stringify(req.user));
+    res.redirect(CLIENT_URL)
+})
 
 
 app.get('/auth/logout', (req, res) => {
     req.logout()
+    res.clearCookie('user');
     res.redirect(CLIENT_URL)
 })
 
 app.get('/login/success', async(req, res) => {
+    
     if (req.user) {
-        console.log(await tokenExpired(req?.user?.accessToken))
+        // console.log(await tokenExpired(req?.user?.accessToken))
         const tokenNotValid = await tokenExpired(req.user?.accessToken)
         if(tokenNotValid === true){
             return res.status(401).json({error:"session timeout"})
